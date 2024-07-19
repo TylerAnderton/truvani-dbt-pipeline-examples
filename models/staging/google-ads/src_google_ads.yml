@@ -1,0 +1,43 @@
+version: 2
+
+sources:
+  - name: google_ads
+    description: Google ads data uploaded through Airbyte using custom GAQL
+    database: airbyte_etl_prod
+    schema: public
+    tables:
+      - name: google_ads_campaigns
+        description: Each row represents daily metrics for a single ad campaign.
+        columns:
+          - name: _airbyte_raw_id
+            tests:
+              - unique
+              - not_null
+          - name: campaign_id
+            description: Unique ID for each campaign
+            tests:
+              - not_null
+          - name: segments_date
+            description: Date represented by each row
+            tests:
+              - not_null
+
+      - name: google_ads_landing_pages
+        description: Each row represents daily metrics for a single ad campaign/landing page combination. Aggregate PMAX metrics are estimated & inaccurate for landing pages -- use google_ads_campaign_metrics instead.
+        columns:
+          - name: _airbyte_raw_id
+            tests:
+              - unique
+              - not_null
+          - name: campaign_id
+            description: Unique ID for each campaign
+            tests:
+              - not_null
+          - name: segments_date
+            description: Date represented by each row
+            tests:
+              - not_null
+          - name: landing_page_view_unexpanded_final_url
+            description: Unique landing page url
+            tests:
+              - not_null

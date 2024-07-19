@@ -1,0 +1,27 @@
+version: 2
+
+sources:
+  - name: spins
+    description: SPINS Retail data extracts downloaded from the Satori portal
+    database: airbyte_etl_prod
+    schema: public
+    tables:
+      - name: spins_retail_upc_weekly
+        description: Weekly "trended" metrics at the UPC level for all brands in all channels. Currently limited to total geographies, but can/may be extended to regional geographies. All fields of type text.
+        columns:
+          - name: Time Period
+            description: Length of time period represented by each row
+          - name: Time Period End Date
+            description: End date of each weekly time period
+          - name: Product Level
+            description: Level of data for each row
+          - name: Product Universe
+            description: Universe selected in Satori portal extract
+          - name: Brand
+            description: Brand name for each product
+          - name: UPC
+            description: Unique identifier for each product. Multiple weekly rows for each product
+          - name: Description
+            description: Name/description for each product
+          - name: First Week Selling
+            description: Date of product launch in retail

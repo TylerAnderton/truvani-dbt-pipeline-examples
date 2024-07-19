@@ -1,0 +1,18 @@
+version: 2
+
+sources:
+  - name: tiktok
+    description: Tiktok ads data uploaded through Airbyte connector
+    database: airbyte_etl_prod
+    schema: public
+    tables:
+      - name: tiktok_ads
+        description: Each row represents daily metrics for a single ad, listed by id
+        columns:
+          - name: _airbyte_raw_id
+            tests:
+              - unique
+              - not_null
+          - name: ad_id
+            tests:
+              - not_null

@@ -1,0 +1,69 @@
+
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: dtc_analytics
+version: '1.0.0'
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'default'
+
+# These configurations specify where dbt should look for different types of files.
+# The `source-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"  # directory which will store compiled SQL files
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+models:
+  dtc_analytics:
+    intermediate:
+      shopify:
+        orders-line-items:
+          int_shopify__fulfillments_line_items_labeled:
+            materialized: table
+          int_shopify__orders_line_items_labeled:
+            materialized: table
+    marts:
+      dtc:
+        kpi-daily:
+          materialized: table
+        kpi-daily-ads:
+          materialized: table
+        kpi-monthly-to-date:
+          materialized: table
+        full-kpi-daily:
+          materialized: table
+        metrics-kpi-daily:
+          materialized: table
+        new-customer-rate-campaign-daily:
+          materialized: table
+      finance:
+        materialized: table
+    staging:
+      shopify:
+        stg_shopify__orders_fulfillments:
+          materialized: table
+        stg_shopify__orders_fulfillments_line_items:
+          materialized: table
+        stg_shopify__orders_line_items:
+          materialized: table
+        stg_shopify__orders_refunds:
+          materialized: table
+        stg_shopify__orders_refunds_line_items:
+          materialized: table
+        stg_shopify__orders_shipping_lines:
+          materialized: table

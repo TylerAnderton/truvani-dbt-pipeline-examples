@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: microsoft
+    description: Microsoft ads data uploaded through Airbyte connector
+    database: airbyte_etl_prod
+    schema: public
+    tables:
+      - name: ms_ads_campaigns
+        description: Each row represents daily metrics for a single ad campaign, listed by id
+        columns:
+          - name: _airbyte_raw_id
+            tests:
+              - unique
+              - not_null
+          - name: "CampaignId"
+            description: Unique ID for each campaign
+          - name: "TimePeriod"
+            description: Date represented by each row
+

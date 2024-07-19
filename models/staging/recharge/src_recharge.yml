@@ -1,0 +1,41 @@
+version: 2
+
+sources:
+  - name: recharge
+    description: Recharge subscription data. Migrating subscriptions to Stay.ai in Oct 2023
+    database: airbyte_etl_prod
+    schema: public
+    tables:
+      - name: recharge_v2_customers
+        description: One row for each unique subscriber, active and inactive
+        columns:
+          - name: id
+            description: primary key. type int8
+            tests:
+              - not_null
+              - unique
+          - name: hash
+            description: customer hash key created by Recharge for joining with other tables
+            tests:
+              - not_null
+              - unique
+      - name: recharge_v2_subscriptions
+        description: One row for each item subscription. Can have multiple subscriptions per subscriber and per initial order_id
+        columns:
+          - name: id
+            description: primary key. unique subscription id
+            tests:
+              - not_null
+              - unique
+      - name: recharge_v2_orders
+        description: One row for each order. Includes both new and recurring orders
+        columns:
+          - name: id
+            description: primary key. recharge order id. does not match shopify order id
+            tests:
+              - not_null
+              - unique
+          - name: email
+            description: customer email tied to order. 
+          - name: customer
+            description: JSONB object containing customer information. 

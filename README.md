@@ -1,0 +1,5 @@
+# Truvani dbt Pipeline Examples
+
+This repository displays some examples of the transformation pipeline that I have built and maintain at Truvani. No private or proprietary information is included, and all table names and filter conditions have been generalized.
+
+The model directories in this repository roughly follow dbt's conventions. `staging` models connect to the data sources (usually Airbyte) and handle the most basic transformations that are needed for the rest of the pipeline. `intermediate` models then perform intermediary calculations, aggregations, and joining of multiple data sources. Most of the work is done here. Finally, `marts` models perform the very final calculations needed and are accessed by our dashboarding platform, Metabase, to display these metrics to analysts and stakeholders. These `marts` models are organized by the team for whom they are designed: `dtc` models make up the bulk of the project and provide KPIs for our DTC marketing team, `finance` models aggregate metrics for our finance analysts' reporting, and `retail` models display information about our products' performance in retail stores across the US.

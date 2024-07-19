@@ -1,0 +1,22 @@
+version: 2
+
+sources:
+  - name: facebook
+    description: Facebook ads data uploaded through Airbyte. Main account and Truvani Health account synced as separate connectors
+    database: airbyte_etl_prod
+    schema: public
+    tables:
+      - name: fb_ads_ads
+        description: Each row represents daily metrics for a single ad within the Main Facebook account
+        columns:
+          - name: _airbyte_raw_id
+            tests:
+              - unique
+              - not_null
+      - name: fb_he1_ads
+        description: Each row represents daily metrics for a single ad within the Truvani Health Facebook account
+        columns:
+          - name: _airbyte_raw_id
+            tests:
+              - unique
+              - not_null

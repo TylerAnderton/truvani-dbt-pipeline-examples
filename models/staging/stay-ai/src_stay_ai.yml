@@ -1,0 +1,37 @@
+version: 2
+
+sources:
+  - name: stay_ai
+    description: Stay.ai subscription data. Migrate subscriptions to Stay.ai in Oct 2023
+    database: airbyte_etl_prod
+    schema: public
+    tables:
+      - name: stayai_v2_Subscriptions
+        description: One row for each subscription. Can have multiple line_items per subscription
+        columns:
+          - name: _airbyte_raw_id
+            tests:
+              - unique
+              - not_null
+          - name: id
+            description: primary key for each row.
+            tests:
+              - not_null
+              - unique
+          - name: "subscriptionId"
+            description: Unique subscription id
+          - name: "customerId"
+            description: unique id for each subscriber
+      - name: stayai_v2_Orders
+        description: One row for each order. 
+        columns:
+          - name: _airbyte_raw_id
+            tests:
+              - unique
+              - not_null
+          - name: "orderName"
+            description: matches shopify order name
+          - name: "subscriptionId"
+            description: Unique subscription id
+          - name: "customerId"
+            description: unique id for each subscriber

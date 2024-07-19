@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: clickfunnels
+    description: Clickfunnels data uploaded to Postgres in real-time via Zapier. Historical data manually uploaded & joined using transformations directly within PostgreSQL's clickfunnels_from_zapier database. Foreign data wrapper used to connect to airbyte_etl_prod database.
+    schema: public
+    tables:
+      - name: clickfunnel_orders
+        description: One row for each Clickfunnels "charge". Mulitple rows combine to form complete orders in the Shopify database.
+        columns:
+          - name: charge_id
