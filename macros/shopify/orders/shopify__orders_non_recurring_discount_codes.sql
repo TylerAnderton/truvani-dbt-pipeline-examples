@@ -4,22 +4,16 @@
 
 with
 
-shopify_orders as (
-
-    select * from {{ ref('stg_shopify__orders') }}
-
-),
-
 final as (
 
     select
         *
     from 
-        shopify_orders 
+        {{ ref('stg_shopify__orders') }} 
     where
         discount_codes @> ANY({{ code_jsonb_array }})
-        and tags !~* 'subscription recurring order'
-        and tags !~* 'active subscription'
+        and tags !~* 'subscription recurring order|active subscription'
+        and app_id <> 5859381 -- not Stay AI recurring orders
         and cancelled_at is null
 )
 

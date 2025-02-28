@@ -4,6 +4,12 @@
     subrate_model=None
 ) %}
 
+{{ config(
+    materialized='incremental',
+    unique_key='date_pst',
+    on_schema_change='sync'
+) }}
+
 with
 
 kpi_daily as (

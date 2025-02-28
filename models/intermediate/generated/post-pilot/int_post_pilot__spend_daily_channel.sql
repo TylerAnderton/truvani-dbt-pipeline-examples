@@ -3,7 +3,7 @@ with
 date_series as (
 
     select generate_series(
-        '2023-05-18'::date, 
+        '2000-01-01'::date, 
         current_date, 
         '1 day'::interval
     )::date as report_date
@@ -17,7 +17,7 @@ generated_daily_spend as (
         report_date,
         
         case 
-	        when report_date <= '2023-07-06'::date then 25.00
+	        when report_date <= '2020-01-01'::date then 500.00 -- sanitized spend amount and date
 	        else 0.00
 	    end as spend
 

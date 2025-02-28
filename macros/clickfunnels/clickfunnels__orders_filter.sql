@@ -13,12 +13,6 @@
 
 with 
 
-clickfunnels_orders as (
-
-    select * from {{ ref('stg_clickfunnels__orders') }}
-
-), 
-
 orders as (
 
     select 
@@ -28,7 +22,7 @@ orders as (
 			else null 
 		end as unique_order
     from
-        clickfunnels_orders
+        {{ ref('stg_clickfunnels__orders') }}
     where
 
         {% if utm_terms_exact|length > 0 -%}

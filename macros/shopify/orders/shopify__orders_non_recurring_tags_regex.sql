@@ -5,18 +5,12 @@
 
 with
 
-shopify_orders as (
-
-    select * from {{ ref('stg_shopify__orders') }}
-
-),
-
 final as (
 
     select
         *
     from 
-        shopify_orders 
+        {{ ref('stg_shopify__orders') }} 
     where
         {% if regex_include_list|length > 0 -%}
             {% for regex in regex_include_list -%}
@@ -32,8 +26,8 @@ final as (
             {% endfor %}
         {%- endif %}
 
-        tags !~* 'subscription recurring order'
-        and tags !~* 'active subscription'
+        tags !~* 'subscription recurring order|active subscription'
+        and app_id <> 5859381 -- not Stay AI recurring orders
         and cancelled_at is null
 )
 

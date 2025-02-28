@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: dtc_joined__full_kpi_daily_google_shopping
+    columns:
+      - name: date_pst
+        tests:
+          - not_null
+          - unique
+  - name: dtc_joined__full_kpi_daily_main
+    columns:
+      - name: date_pst
+        tests:
+          - not_null
+          - unique
+  - name: dtc_joined__full_kpi_daily_sample
+    columns:
+      - name: date_pst
+        tests:
+          - not_null
+          - unique

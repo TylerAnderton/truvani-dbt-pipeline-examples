@@ -1,20 +1,8 @@
 {% macro join_shopify_and_cf_sample_revenue_orders_daily(shopify_rev_orders_model, cf_rev_orders_model) %}
 
-with shopify as (
-
-    select * 
-    from {{ ref(shopify_rev_orders_model) }}
-
-),
+with 
 
 {% if cf_rev_orders_model %}
-    
-cf as (
-
-    select * 
-    from {{ ref(cf_rev_orders_model) }}
-
-),
 
 final as (
 
@@ -33,8 +21,8 @@ final as (
         + coalesce(cf.order_count, 0) 
         as order_count
 
-    from shopify
-    full join cf 
+    from {{ ref(shopify_rev_orders_model) }} as shopify
+    full join {{ ref(cf_rev_orders_model) }} as cf 
         using (date_pst)
 
 )
@@ -47,7 +35,7 @@ final as (
         coalesce(shopify.date_pst) as date_pst,
         coalesce(shopify.total, 0) as revenue,
         coalesce(shopify.order_count, 0) as order_count    
-    from shopify
+    from {{ ref(shopify_rev_orders_model) }} as shopify
 
 )
 

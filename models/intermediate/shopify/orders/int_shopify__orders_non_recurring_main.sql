@@ -14,9 +14,6 @@
         $|
         fb|
         remarketing|
-        main|
-        matcha|
-        chai|
         cbo(
             ,|
             $|

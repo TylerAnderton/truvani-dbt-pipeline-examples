@@ -4,6 +4,12 @@
     sample=False
 ) %}
 
+{{ config(
+    materialized='incremental',
+    unique_key='date_',
+    on_schema_change='sync'
+) }}
+
 with spend as (
 
     select * from {{ ref(spend_model) }}

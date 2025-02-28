@@ -13,10 +13,13 @@
 ] %}
 
 {% set discount_codes=[
-    'OQZP25',
-    'TRU58392014736',
-    'TRU74920183564',
-    'TRU38167492058'
+    'GOOGLE25',
+    'SHOPPING50'
+] %}
+
+{% set code_regex_include_list=[
+    '^BR.*',
+    '^NB.*'
 ] %}
 
 select * from (
@@ -31,3 +34,11 @@ union
 select * from (
     {{ shopify__orders_non_recurring_discount_codes(discount_codes) }}
 ) as discount_code_orders
+
+union
+
+select * from (
+    {{ shopify__orders_non_recurring_discount_code_regex(
+        regex_include_list=code_regex_include_list
+    ) }}
+) as discount_regex_orders
