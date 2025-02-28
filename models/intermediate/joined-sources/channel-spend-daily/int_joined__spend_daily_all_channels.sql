@@ -24,6 +24,18 @@ microsoft as (
 
 ),
 
+influencers as (
+
+    select * from {{ ref('int_influencers__spend_daily_channel') }}
+
+),
+
+post_pilot as (
+
+    select * from {{ ref('int_post_pilot__spend_daily_channel') }}
+
+),
+
 final as (
 
     select 
@@ -31,7 +43,9 @@ final as (
             facebook.report_date,
             google_ads.report_date,
             tiktok.report_date,
-            microsoft.report_date
+            microsoft.report_date,
+            influencers.report_date,
+            post_pilot.report_date
         ) as report_date,
         
         round(
@@ -39,7 +53,9 @@ final as (
                 coalesce(facebook.spend, 0) 
                 + coalesce(google_ads.spend, 0) 
                 + coalesce(tiktok.spend, 0) 
-                + coalesce(microsoft.spend, 0)
+                + coalesce(microsoft.spend, 0) 
+                + coalesce(influencers.spend, 0) 
+                + coalesce(post_pilot.spend, 0)
             )::numeric,
             2
         ) as spend
@@ -53,6 +69,12 @@ final as (
         using (report_date)
 
     full join microsoft
+        using (report_date)
+
+    full join influencers
+        using (report_date)
+
+    full join post_pilot
         using (report_date)
 
 )

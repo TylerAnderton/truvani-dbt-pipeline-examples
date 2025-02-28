@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: dtc_joined__blended_kpi_daily_all_channels
+    columns:
+      - name: report_date
+        tests:
+          - not_null
+          - unique
