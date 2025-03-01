@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: finance_shopify__quantities_sku_rev_type_daily
+    columns:
+      - name: unique_id
+        tests:
+          - not_null
+          - unique
+  - name: finance_shopify__quantities_sku_rev_type_orders_daily
+    columns:
+      - name: unique_id
+        tests:
+          - not_null
+          - unique
+  - name: finance_shopify__quantities_sku_totals_daily
+    columns:
+      - name: unique_id
+        tests:
+          - not_null
+          - unique
+  - name: finance_shopify__quantities_sku_totals_orders_daily
+    columns:
+      - name: unique_id
+        tests:
+          - not_null
+          - unique
+  - name: finance_shopify__revenues_sku_rev_type_daily
+    columns:
+      - name: unique_id
+        tests:
+          - not_null
+          - unique
+  - name: finance_shopify__revenues_sku_rev_type_orders_daily
+    columns:
+      - name: unique_id
+        tests:
+          - not_null
+          - unique
+  - name: finance_shopify__revenues_sku_totals_daily
+    columns:
+      - name: unique_id
+        tests:
+          - not_null
+          - unique
+  - name: finance_shopify__revenues_sku_totals_orders_daily
+    columns:
+      - name: unique_id
+        tests:
+          - not_null
+          - unique
+  - name: finance_shopify__revenues_totals_daily
+    columns:
+      - name: date
+        tests:
+          - not_null
+          - unique
+  

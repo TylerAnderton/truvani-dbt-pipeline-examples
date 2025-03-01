@@ -1,11 +1,10 @@
+{{ config(
+    materialized='incremental',
+    unique_key='unique_id',
+    on_schema_change='sync'
+) }}
+
 with 
-
-rev_type_revenues as (
-
-    select *
-    from {{ ref('finance_shopify__revenues_sku_rev_type_daily') }}
-
-),
 
 total_revenues as (
 
@@ -17,14 +16,16 @@ total_revenues as (
         coalesce(sum(line_item_discount), 0) as line_item_discount,
         coalesce(sum(line_item_refund), 0) as line_item_refund,
         coalesce(sum(line_item_gross_revenue), 0) - coalesce(sum(line_item_discount), 0) - coalesce(sum(line_item_refund), 0) as line_item_net_revenue
-    from rev_type_revenues
+    from {{ ref('finance_shopify__revenues_sku_rev_type_daily') }}
     group by
         date,
         line_item_sku
 
 )
 
-select *
+select 
+    date::text || line_item_sku as unique_id, -- unique_id for incremental updates
+    *
 from total_revenues
 order by 
     date desc,

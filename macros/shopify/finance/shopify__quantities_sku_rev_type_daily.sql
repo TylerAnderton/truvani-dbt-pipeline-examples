@@ -4,6 +4,12 @@
     b2b=false
 ) %}
 
+{{ config(
+    materialized='incremental',
+    unique_key='unique_id',
+    on_schema_change='sync'
+) }}
+
 with 
 
 line_items as (
@@ -61,10 +67,13 @@ joined_quantities as (
 
 )
 
-select *
+select 
+    date::text || coalesce(line_item_sku, 'OTHER') || line_item_revenue_type as unique_id, -- unique_id for incremental updates
+    *
 from joined_quantities
 order by 
     date desc,
-    line_item_sku asc
+    line_item_sku asc,
+    line_item_revenue_type asc
     
 {% endmacro %}

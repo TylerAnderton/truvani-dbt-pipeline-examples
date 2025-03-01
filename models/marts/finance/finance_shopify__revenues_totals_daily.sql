@@ -1,3 +1,9 @@
+{{ config(
+    materialized='incremental',
+    unique_key='date',
+    on_schema_change='sync'
+) }}
+
 with 
 
 line_items as (
@@ -110,5 +116,6 @@ joined as (
 
 select *
 from joined
+where date is not null
 order by 
     date desc

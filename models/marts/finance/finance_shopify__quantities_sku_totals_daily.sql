@@ -1,11 +1,10 @@
+{{ config(
+    materialized='incremental',
+    unique_key='unique_id',
+    on_schema_change='sync'
+) }}
+
 with 
-
-rev_type_quantities as (
-
-    select *
-    from {{ ref('finance_shopify__quantities_sku_rev_type_daily') }}
-
-),
 
 total_quantities as (
 
@@ -14,14 +13,16 @@ total_quantities as (
         line_item_sku,
         sum(total_quantity) as total_quantity,
         sum(expensed_quantity) as expensed_quantity
-    from rev_type_quantities
+    from {{ ref('finance_shopify__quantities_sku_rev_type_daily') }}
     group by
         date,
         line_item_sku
 
 )
 
-select *
+select 
+    date::text || line_item_sku as unique_id, -- unique_id for incremental updates
+    *
 from total_quantities
 order by 
     date desc,
