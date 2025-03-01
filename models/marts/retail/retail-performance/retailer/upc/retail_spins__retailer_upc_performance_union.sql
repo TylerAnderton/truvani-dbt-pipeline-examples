@@ -1,18 +1,12 @@
-{% set time_periods=[
-    '4',
-    '12',
-    '26', 
-    '52'
-] %}
-
-{% set retail_upc_agg_models=[
-    'retail_spins__retailer_upc_performance_4wk',
-    'retail_spins__retailer_upc_performance_12wk',
-    'retail_spins__retailer_upc_performance_26wk',
-    'retail_spins__retailer_upc_performance_52wk'
-] %}
-
-{{ spins__upc_performance_union(
-    time_periods,
-    retail_upc_agg_models
+{{ config(
+    materialized='table',
+    on_schema_change='sync',
+    post_hook="
+        ALTER TABLE retail_spins__retailer_upc_performance_union RENAME TO retail_spins__retailer_upc_performance_union_old;
+        ALTER TABLE retail_spins__retailer_upc_performance_union_stg RENAME TO retail_spins__retailer_upc_performance_union;
+        DROP TABLE retail_spins__retailer_upc_performance_union_old;
+    "
 ) }}
+
+select *
+from {{ ref('retail_spins__retailer_upc_performance_union_stg') }}

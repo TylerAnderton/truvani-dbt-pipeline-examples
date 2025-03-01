@@ -3,7 +3,7 @@
     retail_brand_agg_models
 ) %}
 
--- {{ config(materialized='table') }}
+{{ config(materialized='table') }}
 
 with 
 

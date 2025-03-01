@@ -3,7 +3,7 @@
     retail_upc_agg_models
 ) %}
 
--- {{ config(materialized='table') }}
+{{ config(materialized='table') }}
 
 with 
 
