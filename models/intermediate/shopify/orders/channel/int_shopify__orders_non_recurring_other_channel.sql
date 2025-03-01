@@ -13,7 +13,8 @@ attributed_orders as (
             ref('int_shopify__orders_non_recurring_facebook_channel'),
             ref('int_shopify__orders_non_recurring_tiktok_channel'),
             ref('int_shopify__orders_non_recurring_google_channel'),
-            ref('int_shopify__orders_non_recurring_microsoft_channel')
+            ref('int_shopify__orders_non_recurring_post_pilot_channel'),
+            ref('int_shopify__orders_non_recurring_influencers')
         ],
         include=[
             "name",

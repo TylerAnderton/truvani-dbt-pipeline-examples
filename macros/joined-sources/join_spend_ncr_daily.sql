@@ -3,6 +3,12 @@
     ncr_model
 ) %}
 
+{{ config(
+    materialized='incremental',
+    unique_key='report_date',
+    on_schema_change='sync'
+) }}
+
 with
 
 spend_daily as (

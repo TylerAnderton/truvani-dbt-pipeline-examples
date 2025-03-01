@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: dtc_joined__kpi_monthly_to_date_all_channels
+    columns:
+      - name: date_month
+        tests:
+          - not_null
+          - unique
+  - name: dtc_joined__kpi_monthly_to_date_by_channel
+    columns:
+      - name: unique_id
+        tests:
+          - not_null
+          - unique
+  - name: dtc_joined__kpi_monthly_to_date_facebook_channel
+    columns:
+      - name: date_month
+        tests:
+          - not_null
+          - unique
+  - name: dtc_joined__kpi_monthly_to_date_google_channel
+    columns:
+      - name: date_month
+        tests:
+          - not_null
+          - unique
+  - name: dtc_joined__kpi_monthly_to_date_influencers_channel
+    columns:
+      - name: date_month
+        tests:
+          - not_null
+          - unique
+  - name: dtc_joined__kpi_monthly_to_date_microsoft_channel
+    columns:
+      - name: date_month
+        tests:
+          - not_null
+          - unique
+  - name: dtc_joined__kpi_monthly_to_date_other_channel
+    columns:
+      - name: date_month
+        tests:
+          - not_null
+          - unique
+  - name: dtc_joined__kpi_monthly_to_date_post_pilot_channel
+    columns:
+      - name: date_month
+        tests:
+          - not_null
+          - unique
+  - name: dtc_joined__kpi_monthly_to_date_tiktok_channel
+    columns:
+      - name: date_month
+        tests:
+          - not_null
+          - unique
+  

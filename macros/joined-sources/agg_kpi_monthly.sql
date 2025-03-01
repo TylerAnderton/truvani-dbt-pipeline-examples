@@ -3,6 +3,12 @@
     month_to_date=False
 ) %}
 
+{{ config(
+    materialized='incremental',
+    unique_key='date_month',
+    on_schema_change='sync'
+) }}
+
 with
 
 kpi_daily as (
