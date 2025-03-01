@@ -13,22 +13,32 @@
     
     {% if agg_level|lower == 'campaign' %}
         {% set agg_layers = agg_layers ~ '\ncampaign_name,' %}
+        {% set unique_id='date_pst::text || campaign_name' %}
     {% endif %}
     {% if agg_level|lower == 'ad' %}
         {% set agg_layers = agg_layers ~ '\ncampaign_name,\nad_name,' %}
+        {% set unique_id='date_pst::text || campaign_name || ad_name' %}
     {% endif %}
 
 {% elif agg_type|lower == 'single' %}
 
     {% if agg_level|lower == 'campaign' %}
         {% set agg_layers = agg_layers ~ '\ncampaign_name,' %}
+        {% set unique_id='date_pst::text || campaign_name' %}
     {% endif %}
     {% if agg_level|lower == 'ad' %}
         {% set agg_layers = agg_layers ~ '\nad_name,' %}
+        {% set unique_id='date_pst::text || ad_name' %}
     {% endif %}
 
 {%- endif %}
 
+
+{{ config(
+    materialized='incremental',
+    unique_key='unique_id',
+    on_schema_change='sync'
+) }}
 
 with facebook as (
 
@@ -87,7 +97,8 @@ joined as (
             {% if reactivation_model -%}
                 ,
                 reactivation_daily.utm_term
-            {%- endif %}
+            {%- endif %},
+            'OTHER'
         ) as campaign_name,
 
         coalesce(
@@ -100,7 +111,8 @@ joined as (
             {% if reactivation_model -%}
                 ,
                 reactivation_daily.ad_name
-            {%- endif %}
+            {%- endif %},
+            'OTHER'
         ) as ad_name,
 		
 		coalesce(facebook.spend, 0) as spend,
@@ -160,6 +172,7 @@ joined as (
 initial_agg as (
 
 	select
+
 		date_pst,
 		
         {{agg_layers}}
@@ -312,7 +325,9 @@ initial_agg as (
 		
 )
 
-select *
+select 
+    {{unique_id}} as unique_id, -- unique_id for incremental updates
+    *
 from initial_agg
 where date_pst is not null
 

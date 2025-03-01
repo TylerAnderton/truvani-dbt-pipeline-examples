@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: dtc_joined__metrics_kpi_daily_ads_main
+    columns:
+      - name: unique_id
+        tests:
+          - not_null
+          - unique
+  - name: dtc_joined__metrics_kpi_daily_ads_sample
+    columns:
+      - name: unique_id
+        tests:
+          - not_null
+          - unique
+  - name: dtc_joined__metrics_kpi_daily_adsets_main
+    columns:
+      - name: unique_id
+        tests:
+          - not_null
+          - unique
+  - name: dtc_joined__metrics_kpi_daily_campaigns_main
+    columns:
+      - name: unique_id
+        tests:
+          - not_null
+          - unique
+  - name: dtc_joined__metrics_kpi_daily_campaigns_sample
+    columns:
+      - name: unique_id
+        tests:
+          - not_null
+          - unique

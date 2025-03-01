@@ -14,28 +14,40 @@
     
     {% if agg_level|lower == 'campaign' %}
         {% set agg_layers = agg_layers ~ '\ncampaign_name,' %}
+        {% set unique_id='date_pst::text || campaign_name' %}
     {% endif %}
     {% if agg_level|lower == 'adset' %}
         {% set agg_layers = agg_layers ~ '\ncampaign_name,\nadset_name,' %}
+        {% set unique_id='date_pst::text || campaign_name || adset_name' %}
     {% endif %}
     {% if agg_level|lower == 'ad' %}
         {% set agg_layers = agg_layers ~ '\ncampaign_name,\nadset_name,\nad_name,' %}
+        {% set unique_id='date_pst::text || campaign_name || adset_name || ad_name' %}
     {% endif %}
 
 {% elif agg_type|lower == 'single' %}
 
     {% if agg_level|lower == 'campaign' %}
         {% set agg_layers = agg_layers ~ '\ncampaign_name,' %}
+        {% set unique_id='date_pst::text || campaign_name' %}
     {% endif %}
     {% if agg_level|lower == 'adset' %}
         {% set agg_layers = agg_layers ~ '\nadset_name,' %}
+        {% set unique_id='date_pst::text || adset_name' %}
     {% endif %}
     {% if agg_level|lower == 'ad' %}
         {% set agg_layers = agg_layers ~ '\nad_name,' %}
+        {% set unique_id='date_pst::text || ad_name' %}
     {% endif %}
 
 {%- endif %}
 
+
+{{ config(
+    materialized='incremental',
+    unique_key='unique_id',
+    on_schema_change='sync'
+) }}
 
 with facebook as (
 
@@ -94,7 +106,8 @@ joined as (
             {% if reactivation_model -%}
                 ,
                 reactivation_daily.campaign_name
-            {%- endif %}
+            {%- endif %},
+            'OTHER'
         ) as campaign_name,
 
         coalesce(
@@ -107,7 +120,8 @@ joined as (
             {% if reactivation_model -%}
                 ,
                 reactivation_daily.adset_name
-            {%- endif %}
+            {%- endif %},
+            'OTHER'
         ) as adset_name,
 
         coalesce(
@@ -120,7 +134,8 @@ joined as (
             {% if reactivation_model -%}
                 ,
                 reactivation_daily.ad_name
-            {%- endif %}
+            {%- endif %},
+            'OTHER'
         ) as ad_name,
 		
 		coalesce(facebook.spend, 0) as spend,
@@ -456,14 +471,7 @@ matched_adsets as (
             (
                 (a.total_orders + b.total_orders)::float
                 /
-                nullif((a.unique_outbound_clicks + b.unique_outbound_clicks), 0)
-            )::numeric,
-            2
-        ) as conv_rate,
-
-        round(
-            (
-                (a.total_revenue + b.total_revenue)
+                nullif((a.unique_outbounjoin_facebook_metrics_and_ncr_sample_offer_daily_revenue)
                 /
                 nullif((a.unique_outbound_clicks + b.unique_outbound_clicks), 0)
             )::numeric,
@@ -537,7 +545,9 @@ final as (
 )
 {%- endif %}
 
-select *
+select 
+    {{unique_id}} as unique_id, -- unique_id for incremental updates
+    *
 
 {%- if 
     fix_adsets
