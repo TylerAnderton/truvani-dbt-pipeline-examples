@@ -1,3 +1,9 @@
+{{ config(
+    materialized='incremental',
+    unique_key='unique_item_id',
+    on_schema_change='sync'
+) }}
+
 {% set apps={
     "3613079":"App 1",
     "88312":"App 2",
@@ -67,6 +73,9 @@ shipping_totals as (
 orders_line_items as (
 
     select 
+
+        orders.id::text || coalesce(line_items.id::text, 'NULL') as unique_item_id, -- unique_id for incremental updates
+
         orders.order_id,
         orders.name as order_name,
         orders.created_at_pt as ordered_at_pt,
@@ -114,7 +123,13 @@ orders_line_items as (
         -- round((orders.subtotal_price + coalesce(shipping.discounted_shipping_price, 0) + orders.total_tax)::numeric, 2) as total_calc,
         -- round((orders.total_line_items_price - orders.total_discounts + coalesce(shipping.shipping_price, 0) + orders.total_tax)::numeric, 2) as total_calc2,
        
-        line_items.sku as line_item_sku,
+        -- line_items.sku as line_item_sku,
+        case
+            when line_items.sku = '' and line_items.name ~* 'The Only Bar \(Chocolate Peanut Butter\) - 1 Bar - Replacement' then 'OB-CPB-1-R'
+            when line_items.sku = '' and line_items.name ~* 'The Only Bar \(Chocolate Peanut Butter\) - 1 Bar' then 'OB-CP-1'
+            when line_items.sku = '' and line_items.name ~* 'The Only Bar \(Mint Chocolate\) - 1 Bar' then 'OB-MC-1'
+            else line_items.sku
+        end as line_item_sku,
 
         line_items.name as line_item_name,
         -- line_items.variant_title,

@@ -1,3 +1,9 @@
+{{ config(
+    materialized='incremental',
+    unique_key='oli_unique_id',
+    on_schema_change='sync'
+) }}
+
 {% set apps={
     "3613079":"App 1",
     "88312":"App 2",
@@ -63,12 +69,20 @@ shipping_totals as (
 fulfillments_line_items_join as (
 
     select
+
+        (fulfillments.id || line_items.unique_id) as fulfillment_item_id, -- unique_id for incremental updates
+
         fulfillments.id as fulfillments_id,
         fulfillments.name as fulfillment_name,
         fulfillments.status as fulfillment_status,
         fulfillments.created_at_pt as fulfilled_at_pt,
 
-        line_items.sku as line_item_sku,
+        case
+            when line_items.sku = '' and line_items.name ~* 'The Only Bar \(Chocolate Peanut Butter\) - 1 Bar - Replacement' then 'OB-CPB-1-R'
+            when line_items.sku = '' and line_items.name ~* 'The Only Bar \(Chocolate Peanut Butter\) - 1 Bar' then 'OB-CP-1'
+            when line_items.sku = '' and line_items.name ~* 'The Only Bar \(Mint Chocolate\) - 1 Bar' then 'OB-MC-1'
+            else line_items.sku
+        end as line_item_sku,
 
         line_items.name as line_item_name,
         line_items.price as line_item_price,
@@ -91,6 +105,9 @@ fulfillments_line_items_join as (
 orders_line_items as (
 
     select 
+
+        (orders.order_id::text || coalesce(line_items.fulfillment_item_id, 'NULL')) as oli_unique_id, -- unique_id for incremental updates
+
         orders.order_id,
         orders.name as order_name,
         orders.created_at_pt as ordered_at_pt,

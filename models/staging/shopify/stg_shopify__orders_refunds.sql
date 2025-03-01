@@ -1,10 +1,16 @@
+{{ config(
+    materialized='incremental',
+    unique_key='id',
+    on_schema_change='sync'
+) }}
+
 with
 
 shopify_order_refunds as (
 
     select
 
-        -- orders.id as order_id,
+        -- orders.id as order_id, -- taking from fulfillment instead
         orders.name as order_name,
 
         orders.created_at as order_created_at,

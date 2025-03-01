@@ -1,10 +1,14 @@
+{{ config(
+    materialized='incremental',
+    unique_key='id',
+    on_schema_change='sync'
+) }}
+
 with
 
 shopify_orders_shipping_lines as (
 
     select
-        
-        -- _airbyte_shopify_orders_hashid,
 
         orders.id as order_id,
         orders.name as order_name,
@@ -23,8 +27,6 @@ shopify_orders_shipping_lines as (
         shipping_line -> 'discount_allocations' as discount_allocations,
         shipping_line -> 'discounted_price_set' as discounted_price_set,
         lower(shipping_line ->> 'requested_fulfillment_service_id') as requested_fulfillment_service_id
-
-        -- _airbyte_shipping_lines_hashid
 
     from 
         {{ ref('stg_shopify__orders') }} as orders,

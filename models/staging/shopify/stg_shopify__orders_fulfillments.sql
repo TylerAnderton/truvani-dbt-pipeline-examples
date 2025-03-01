@@ -1,10 +1,16 @@
+{{ config(
+    materialized='incremental',
+    unique_key='id',
+    on_schema_change='sync'
+) }}
+
 with
 
 shopify_fulfillments as (
 
     select
 
-        -- orders.id as order_id,
+        -- orders.id as order_id, -- taking from fulfillment instead
         orders.name as order_name,
 
         orders.created_at as order_created_at,
@@ -24,10 +30,6 @@ shopify_fulfillments as (
         lower((fill ->> 'shipment_status')) as shipment_status,
         (fill ->> 'tracking_number') as tracking_number,
         lower((fill ->> 'tracking_company')) as tracking_company,
-
-        -- admin_graphql_api_id,
-
-        -- _airbyte_fulfillments_hashid,
 
         (fill ->> 'created_at')::timestamptz at time zone 'america/los_angeles' as created_at_pt,
         (fill ->> 'updated_at')::timestamptz at time zone 'america/los_angeles' as updated_at_pt

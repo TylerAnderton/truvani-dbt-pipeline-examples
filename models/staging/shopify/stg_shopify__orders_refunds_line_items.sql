@@ -1,8 +1,16 @@
+{{ config(
+    materialized='incremental',
+    unique_key='unique_id',
+    on_schema_change='sync'
+) }}
+
 with
 
 shopify_order_refunds_line_items as (
 
     select
+
+        refunds.id::text || ((line_item -> 'line_item') ->> 'id') as unique_id, -- str
         
         refunds.order_id,
         refunds.order_name,

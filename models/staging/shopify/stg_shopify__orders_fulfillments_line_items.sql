@@ -1,9 +1,15 @@
+{{ config(
+    materialized='incremental',
+    unique_key='unique_id',
+    on_schema_change='sync'
+) }}
+
 with
 
 shopify_fulfillments_line_items as (
 
     select
-        -- _airbyte_fulfillments_hashid,
+        fulfillments.id::text || (line_item ->> 'id') as unique_id, -- str
 
         fulfillments.order_name,
         fulfillments.order_id,

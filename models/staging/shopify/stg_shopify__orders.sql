@@ -6,6 +6,7 @@ shopify_orders as (
         
         id,
         name,
+        (customer ->> 'id')::bigint as customer_id,
         note,
         tags,
         test,

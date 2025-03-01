@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: stg_shopify__orders_fulfillments
+    columns:
+      - name: id
+        tests:
+          - unique
+          - not_null
+  - name: stg_shopify__orders_fulfillments_line_items
+    columns:
+      - name: unique_id
+        tests:
+          - unique
+          - not_null
+  - name: stg_shopify__orders_line_items
+    columns:
+      - name: id
+        tests:
+          - unique
+          - not_null
+  - name: stg_shopify__orders_refunds
+    columns:
+      - name: id
+        tests:
+          - unique
+          - not_null
+  - name: stg_shopify__orders_refunds_line_items
+    columns:
+      - name: unique_id
+        tests:
+          - unique
+          - not_null
+  - name: stg_shopify__orders_shipping_lines
+    columns:
+      - name: id
+        tests:
+          - unique
+          - not_null      

@@ -30,5 +30,17 @@ sources:
             tests:
               - unique
               - not_null
+      - name: shopify_v2_order_refunds
+        description: One row for each refund issued. Can be multiple refunds for each order.
+        columns:
+          - name: id
+            description: primary key for each refund
+            tests:
+              - unique
+              - not_null
+          - name: order_id
+            description: foreign key to shopify_orders.id
+            tests:
+              - not_null
 
         

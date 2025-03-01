@@ -1,10 +1,14 @@
+{{ config(
+    materialized='incremental',
+    unique_key='id',
+    on_schema_change='sync'
+) }}
+
 with
 
 shopify_orders_line_items as (
 
     select
-
-        -- _airbyte_shopify_orders_hashid,
 
         orders.id as order_id,
         orders.name as order_name,
@@ -41,8 +45,6 @@ shopify_orders_line_items as (
         line_item -> 'discount_allocations' as discount_allocations,
         (line_item ->> 'fulfillable_quantity')::int8 as fulfillable_quantity,
         lower((line_item ->> 'variant_inventory_management')) as variant_inventory_management
-
-        -- _airbyte_line_items_hashid
 
     from 
         {{ ref('stg_shopify__orders') }} as orders,
